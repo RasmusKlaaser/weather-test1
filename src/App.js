@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Search } from "./components/Search";
-import { WeatherCard } from "./components/WeatherCard";
+import { Search } from "./componenents/Search";
+import { WeatherCard } from "./componenents/WeatherCard";
 
 import './App.css';
 import { createMockServer } from './mock/createMockServer';
