@@ -1,41 +1,30 @@
-import { useState } from 'react' 
+import { useState } from "react";
+import { Search } from "./components/Search";
+import { WeatherCard } from "./components/WeatherCard";
+
 import './App.css';
+import { createMockServer } from './mock/createMockServer';
 
-
-import { createMockServer } from './createMockServer' 
-
-createMockServer()
+if(process.env.NODE_ENV === 'development'){
+  createMockServer();
+}
 
 function App() {
-  const [query, setQuery] = useState('')
-  
-  const inputChangeHandler = (event) => {
-    setQuery(event.target.value)
-  } 
 
-  const buttonClickHandler = () => {
-    fetch('http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5')
-    .then((result) => {
-      return result.json()
-    } )
-    .then((cities) => {
-      setSearchResults(cities.nap((city) => ({
-        name:city.name,
-        country: city.country,
-        lat: city.lat, 
-        lon: city.lon
-      })))
-    })
-  } 
+  const [selected, setSelected] = useState([]);
+
+  const selectCity = (city) => {
+    setSelected([city, ...selected]);
+  }
+
   return (
     <div className="App">
-      <h1>Weather Application</h1>
-      <input type="text" data-testid="search-input" onChange={inputChangeHandler}/>
-      <button data-testid="search-button" onClick={buttonClickHandler}>Search</button>
+      <Search selected={selected} onSelectItem={selectCity}/>
 
-      <div data-testid="search-results">
-        {setSearchResults.nap((city) => <div key={'${city.lat}-${city.lon}'}>{city.name}
-          </div>)} 
+      <div data-testid="my-weather-list" className="cities-container">
+        {selected && selected.map((city) => (
+          <WeatherCard key={`${city.lat}-${city.lon}`} city={city}/>
+        ))}
       </div>
     </div>
   );
